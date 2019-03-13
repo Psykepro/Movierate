@@ -1,11 +1,14 @@
 from django.contrib.auth.models import User
 from rest_framework import viewsets
-from movierater.api.serializers import UserSerializer
+from movierater.api.serializers import UserSerializer, MovieSerializer
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+
+from movierater.api.models import Movie
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -13,6 +16,16 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
+    authentication_classes = (TokenAuthentication, SessionAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+
+class MovieViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
     authentication_classes = (TokenAuthentication, SessionAuthentication)
     permission_classes = (IsAuthenticated,)
 
